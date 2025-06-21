@@ -406,7 +406,7 @@ delay_inner
 ; Variables for Game
 ball_x      BYTE 100
 ball_y      BYTE 80
-player_y    BYTE 80
+player_y    BYTE 100
 cpu_y       BYTE 80
 cpu_counter BYTE 0
 joy_state   BYTE 0
@@ -414,3 +414,4 @@ ball_dir_x  BYTE 1
 ball_dir_y  BYTE 1
 
 ; END OF FILE
+

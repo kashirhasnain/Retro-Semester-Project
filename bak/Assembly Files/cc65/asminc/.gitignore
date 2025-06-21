@@ -1,0 +1,5 @@
+labels.txt
+*.prg
+*.d64
+*.o
+LAMAlib*.lib

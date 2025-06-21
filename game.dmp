@@ -1,0 +1,494 @@
+00001  0000             .INCLUDE   "LAMALIB.INC"
+00002  0001             .INCLUDE   "LAMALIB-SPRITES.INC"
+00003  0001             
+00004  0001             ; BALL SPRITE CODE
+00005  0001             *          = $3000
+00006  3000             BALL_SPRITE 
+00007  3000  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00008  3008  00 00 18              BYTE $00,$00,$18,$3C,$3C,$3C,$3C,$18
+00009  3010  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00010  3018  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00011  3020  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00012  3028  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00013  3030  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00014  3038  00 00 00              BYTE $00,$00,$00
+00015  303B             ; PLAYER PADDLE SPRITE CODE
+00016  303B             *          = $3040
+00017  3040             PLAYERPADDLE_SPRITE 
+00018  3040  00 18 18              BYTE $00,$18,$18,$18,$18,$18,$18,$18
+00019  3048  18 18 18              BYTE $18,$18,$18,$18,$18,$18,$18,$18
+00020  3050  18 18 18              BYTE $18,$18,$18,$18,$18,$18,$18,$00
+00021  3058  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00022  3060  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00023  3068  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00024  3070  00 00 00              BYTE $00,$00,$00,$00,$00,$00,$00,$00
+00025  3078  00 00 00              BYTE $00,$00,$00
+00026  307B             ; CPU PADDLE SPRITE CODE
+00027  307B             *          = $3080
+00028  3080             CPUPADDLE_SPRITE 
+00029  3080  0F FF F0              BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
+00030  3089  0F FF F0              BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
+00031  3092  0F FF F0              BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
+00032  309B  0F FF F0              BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
+00033  30A4  0F FF F0              BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
+00034  30AD  0F FF F0              BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
+00035  30B6  0F FF F0              BYTE $0F,$FF,$F0
+00036  30B9             
+00037  30B9                        * = $0801
+00038  0801             
+00039  0801  0B 08 01              BYTE $0B, $08, $01, $00, $9E, $20, $32, $30, $36, $34, $00, $00, $00
+00040  080E             
+00041  080E             ; --------------------------
+00042  080E             ; MENU CODE STARTS AT $0810
+00043  080E             ; --------------------------
+00044  080E                        * = $0810
+00045  0810             
+00046  0810             START
+00047  0810  20 04 0A              JSR CLEAR_SCREEN
+00048  0813             
+00049  0813             MENU_LOOP
+00050  0813  20 53 08              JSR PRINT_MENU
+00051  0816             
+00052  0816             WAIT_KEY
+00053  0816  20 1B 0A              JSR GET_KEY
+00054  0819  C9 31                 CMP #'1'
+00055  081B  F0 0B                 BEQ START_GAME
+00056  081D  C9 32                 CMP #'2'
+00057  081F  F0 1C                 BEQ SHOW_CREDITS
+00058  0821  C9 33                 CMP #'3'
+00059  0823  F0 27                 BEQ EXIT_PROGRAM
+00060  0825  4C 16 08              JMP WAIT_KEY
+00061  0828             
+00062  0828             START_GAME 
+00063  0828  20 04 0A              JSR CLEAR_SCREEN
+00064  082B  20 20 09              JSR PRINT_GAME
+00065  082E  20 0A 0A              JSR WAIT_FOR_KEY
+00066  0831  20 04 0A              JSR CLEAR_SCREEN
+00067  0834             
+00068  0834  20 00 20              JSR $2000        ; CALL THE GAME CODE AT $2000!
+00069  0837  20 04 0A              JSR CLEAR_SCREEN
+00070  083A  4C 13 08              JMP MENU_LOOP
+00071  083D             
+00072  083D             SHOW_CREDITS 
+00073  083D  20 04 0A              JSR CLEAR_SCREEN
+00074  0840  20 6D 09              JSR PRINT_CREDITS
+00075  0843  20 0A 0A              JSR WAIT_FOR_KEY
+00076  0846  20 04 0A              JSR CLEAR_SCREEN
+00077  0849  4C 13 08              JMP MENU_LOOP
+00078  084C             
+00079  084C             EXIT_PROGRAM 
+00080  084C  20 04 0A              JSR CLEAR_SCREEN
+00081  084F  20 E9 09              JSR PRINT_EXIT
+00082  0852  60                    RTS
+00083  0853             
+00084  0853             ; ----- PRINT MAIN MENU -----
+00085  0853             PRINT_MENU 
+00086  0853  A2 00                 LDX #0
+00087  0855             PM_LOOP
+00088  0855  BD 62 08              LDA MENU_TEXT,X
+00089  0858  F0 07                 BEQ PM_DONE
+00090  085A  20 D2 FF              JSR $FFD2
+00091  085D  E8                    INX
+00092  085E  4C 55 08              JMP PM_LOOP
+00093  0861             PM_DONE
+00094  0861  60                    RTS
+00095  0862             
+00096  0862             MENU_TEXT
+00097  0862  0D 0D                 BYTE 13,13
+00098  0864  3D 3D 3D              BYTE "==============================",13
+00099  0883  20 20 20              BYTE "        WELCOME TO PING PONG GAME",13
+00100  08A5  3D 3D 3D              BYTE "==============================",13
+00101  08C4  20 20 31              BYTE "  1. START GAME",13
+00102  08D4  20 20 32              BYTE "  2. CREDITS",13
+00103  08E1  20 20 33              BYTE "  3. EXIT",13
+00104  08EB  2D 2D 2D              BYTE "------------------------------",13
+00105  090A  D3 45 4C              BYTE "SELECT OPTION (1-3): ",0
+00106  0920             
+00107  0920             ; ----- PRINT GAME -----
+00108  0920             PRINT_GAME 
+00109  0920  A2 00                 LDX #0
+00110  0922             PG_LOOP
+00111  0922  BD 2F 09              LDA GAME_TEXT,X
+00112  0925  F0 07                 BEQ PG_DONE
+00113  0927  20 D2 FF              JSR $FFD2
+00114  092A  E8                    INX
+00115  092B  4C 22 09              JMP PG_LOOP
+00116  092E             PG_DONE
+00117  092E  60                    RTS
+00118  092F             
+00119  092F             GAME_TEXT
+00120  092F  0D 0D 2A              BYTE 13,13,"*** GAME STARTING... ***",13
+00121  094A  28 D0 52              BYTE "(PRESS ANY KEY TO RETURN TO MENU)",13,0
+00122  096D             
+00123  096D             ; ----- PRINT CREDITS -----
+00124  096D             PRINT_CREDITS 
+00125  096D  A2 00                 LDX #0
+00126  096F             PC_LOOP
+00127  096F  BD 7C 09              LDA CREDITS_TEXT,X
+00128  0972  F0 07                 BEQ PC_DONE
+00129  0974  20 D2 FF              JSR $FFD2
+00130  0977  E8                    INX
+00131  0978  4C 6F 09              JMP PC_LOOP
+00132  097B             PC_DONE
+00133  097B  60                    RTS
+00134  097C             
+00135  097C             CREDITS_TEXT 
+00136  097C  0D 0D 2A              BYTE 13,13,"*** CREDITS ***",13
+00137  098E  C4 45 56              BYTE "DEVELOPED BY KASHIR HASNAIN",13
+00138  09AA  D3 50 52              BYTE "SPRITES MADE BY OPENSPRITES",13
+00139  09C6  28 D0 52              BYTE "(PRESS ANY KEY TO RETURN TO MENU)",13,0
+00140  09E9             
+00141  09E9             ; ----- PRINT EXIT -----
+00142  09E9             PRINT_EXIT 
+00143  09E9  A2 00                 LDX #0
+00144  09EB             PE_LOOP
+00145  09EB  BD F8 09              LDA EXIT_TEXT,X
+00146  09EE  F0 07                 BEQ PE_DONE
+00147  09F0  20 D2 FF              JSR $FFD2
+00148  09F3  E8                    INX
+00149  09F4  4C EB 09              JMP PE_LOOP
+00150  09F7             PE_DONE
+00151  09F7  60                    RTS
+00152  09F8             
+00153  09F8             EXIT_TEXT
+00154  09F8  0D 0D C7              BYTE 13,13,"GOODBYE!",13,0
+00155  0A04             
+00156  0A04             ; ----- CLEAR SCREEN -----
+00157  0A04             CLEAR_SCREEN 
+00158  0A04  A9 93                 LDA #$93
+00159  0A06  20 D2 FF              JSR $FFD2
+00160  0A09  60                    RTS
+00161  0A0A             
+00162  0A0A             ; ----- WAIT FOR ANY KEY -----
+00163  0A0A             WAIT_FOR_KEY 
+00164  0A0A  A5 CB                 LDA $CB      ; CLEAR BUFFER
+00165  0A0C             WFK_WAIT
+00166  0A0C  AD 01 DC              LDA $DC01
+00167  0A0F  C9 FF                 CMP #$FF
+00168  0A11  F0 F9                 BEQ WFK_WAIT
+00169  0A13             WFK_RELEASE 
+00170  0A13  AD 01 DC              LDA $DC01
+00171  0A16  C9 FF                 CMP #$FF
+00172  0A18  D0 F9                 BNE WFK_RELEASE
+00173  0A1A  60                    RTS
+00174  0A1B             
+00175  0A1B             ; ----- GET KEY (ASCII IN A) -----
+00176  0A1B             GET_KEY
+00177  0A1B  A5 CB                 LDA $CB
+00178  0A1D             GK_WAIT
+00179  0A1D  AD 01 DC              LDA $DC01
+00180  0A20  C9 FF                 CMP #$FF
+00181  0A22  F0 F9                 BEQ GK_WAIT
+00182  0A24  AE 10 D0              LDX $D010
+00183  0A27  20 E4 FF              JSR $FFE4    ; GETIN
+00184  0A2A  60                    RTS
+00185  0A2B             
+00186  0A2B             ; =================================================================
+00187  0A2B             ;                       GAME CODE STARTS HERE
+00188  0A2B             ; =================================================================
+00189  0A2B                        * = $2000
+00190  2000             
+00191  2000             GAME_START 
+00192  2000             
+00193  2000  78                    SEI
+00194  2001  A2 00                 LDX #$00
+00195  2003  8E 20 D0              STX $D020       ; BORDER
+00196  2006  A9 0E                 LDA #$0E
+00197  2008  8D 21 D0              STA $D021       ; BACKGROUND: LIGHT BLUE
+00198  200B             
+00199  200B                        ; SPRITE POINTERS
+00200  200B  A9 40                 LDA #64
+00201  200D  8D F8 07              STA $07F8       ; BALL AT $3000
+00202  2010  A9 41                 LDA #65
+00203  2012  8D F9 07              STA $07F9       ; PLAYER PADDLE AT $3040
+00204  2015  A9 42                 LDA #66
+00205  2017  8D FA 07              STA $07FA       ; CPU PADDLE AT $3080
+00206  201A             
+00207  201A                        ; ENABLE SPRITES 0–2
+00208  201A  A9 07                 LDA #%00000111
+00209  201C  8D 15 D0              STA $D015
+00210  201F             
+00211  201F                        ; SPRITE COLORS
+00212  201F  A9 02                 LDA #$02
+00213  2021  8D 27 D0              STA $D027       ; BALL = RED
+00214  2024  A9 05                 LDA #$05
+00215  2026  8D 28 D0              STA $D028       ; PLAYER = GREEN
+00216  2029  A9 07                 LDA #$07
+00217  202B  8D 29 D0              STA $D029       ; CPU = YELLOW
+00218  202E             
+00219  202E                        ; INITIAL POSITIONS
+00220  202E             
+00221  202E  A9 64                 LDA #100
+00222  2030  8D 57 21              STA BALL_X
+00223  2033  A9 50                 LDA #80
+00224  2035  8D 58 21              STA BALL_Y
+00225  2038             
+00226  2038  A9 50                 LDA #80
+00227  203A  8D 59 21              STA PLAYER_Y
+00228  203D  8D 5A 21              STA CPU_Y
+00229  2040             
+00230  2040             MAINLOOP
+00231  2040  20 52 20              JSR READ_INPUT
+00232  2043  20 AA 20              JSR MOVE_BALL
+00233  2046  20 7D 20              JSR MOVE_CPU
+00234  2049  20 29 21              JSR DRAW_SPRITES
+00235  204C  20 4C 21              JSR DELAY
+00236  204F  4C 40 20              JMP MAINLOOP
+00237  2052             
+00238  2052             READ_INPUT 
+00239  2052  AD 00 DC              LDA $DC00
+00240  2055  8D 5C 21              STA JOY_STATE
+00241  2058             
+00242  2058  AD 5C 21              LDA JOY_STATE
+00243  205B  29 02                 AND #%00000010      ; BIT 1 = UP
+00244  205D  F0 08                 BEQ TRY_UP
+00245  205F             
+00246  205F  AD 5C 21              LDA JOY_STATE
+00247  2062  29 04                 AND #%00000100      ; BIT 2 = DOWN
+00248  2064  F0 0C                 BEQ TRY_DOWN
+00249  2066             
+00250  2066  60                    RTS
+00251  2067             
+00252  2067             TRY_UP
+00253  2067  AD 59 21              LDA PLAYER_Y
+00254  206A  C9 14                 CMP #20
+00255  206C  F0 03                 BEQ SKIP_UP
+00256  206E  CE 59 21              DEC PLAYER_Y
+00257  2071             SKIP_UP
+00258  2071  60                    RTS
+00259  2072             
+00260  2072             TRY_DOWN
+00261  2072  AD 59 21              LDA PLAYER_Y
+00262  2075  C9 C8                 CMP #200
+00263  2077  B0 03                 BCS SKIP_DOWN
+00264  2079  EE 59 21              INC PLAYER_Y
+00265  207C             SKIP_DOWN
+00266  207C  60                    RTS
+00267  207D             
+00268  207D             MOVE_CPU
+00269  207D  EE 5B 21              INC CPU_COUNTER
+00270  2080  AD 5B 21              LDA CPU_COUNTER
+00271  2083  29 01                 AND #%00000001      ; ONLY BIT 0, SO EVERY OTHER FRAME
+00272  2085  D0 22                 BNE SKIP_CPU
+00273  2087  AD 58 21              LDA BALL_Y
+00274  208A  CD 5A 21              CMP CPU_Y
+00275  208D  F0 1A                 BEQ SKIP_CPU
+00276  208F  90 0E                 BCC CPU_UP
+00277  2091             
+00278  2091                        ; MOVE DOWN
+00279  2091  AD 5A 21              LDA CPU_Y
+00280  2094  18                    CLC
+00281  2095  69 02                 ADC #2
+00282  2097  C9 C8                 CMP #200
+00283  2099  B0 0E                 BCS SKIP_CPU
+00284  209B  8D 5A 21              STA CPU_Y
+00285  209E  60                    RTS
+00286  209F             
+00287  209F             CPU_UP
+00288  209F  AD 5A 21              LDA CPU_Y
+00289  20A2  C9 14                 CMP #20
+00290  20A4  F0 03                 BEQ SKIP_CPU
+00291  20A6  CE 5A 21              DEC CPU_Y
+00292  20A9             SKIP_CPU
+00293  20A9  60                    RTS
+00294  20AA             
+00295  20AA             MOVE_BALL
+00296  20AA  AD 5D 21              LDA BALL_DIR_X
+00297  20AD  18                    CLC
+00298  20AE  6D 57 21              ADC BALL_X
+00299  20B1  8D 57 21              STA BALL_X
+00300  20B4             
+00301  20B4  AD 5E 21              LDA BALL_DIR_Y
+00302  20B7  18                    CLC
+00303  20B8  6D 58 21              ADC BALL_Y
+00304  20BB  8D 58 21              STA BALL_Y
+00305  20BE             
+00306  20BE                        ; BOUNCE TOP/BOTTOM
+00307  20BE  AD 58 21              LDA BALL_Y
+00308  20C1  C9 0A                 CMP #10
+00309  20C3  90 07                 BCC INVERT_Y
+00310  20C5  C9 E6                 CMP #230
+00311  20C7  B0 03                 BCS INVERT_Y
+00312  20C9  4C D8 20              JMP CHECK_PADDLES
+00313  20CC             
+00314  20CC             INVERT_Y
+00315  20CC  AD 5E 21              LDA BALL_DIR_Y
+00316  20CF  49 FF                 EOR #$FF
+00317  20D1  18                    CLC
+00318  20D2  69 01                 ADC #1
+00319  20D4  8D 5E 21              STA BALL_DIR_Y
+00320  20D7  60                    RTS
+00321  20D8             
+00322  20D8             CHECK_PADDLES 
+00323  20D8                        ; PLAYER PADDLE
+00324  20D8  AD 57 21              LDA BALL_X
+00325  20DB  C9 1E                 CMP #30
+00326  20DD  90 28                 BCC MISS_LEFT
+00327  20DF  C9 28                 CMP #40
+00328  20E1  B0 0C                 BCS CHECK_CPU
+00329  20E3             
+00330  20E3  AD 58 21              LDA BALL_Y
+00331  20E6  38                    SEC
+00332  20E7  ED 59 21              SBC PLAYER_Y
+00333  20EA  C9 14                 CMP #20
+00334  20EC  90 2F                 BCC BOUNCE_X
+00335  20EE  60                    RTS
+00336  20EF             
+00337  20EF             CHECK_CPU
+00338  20EF  AD 57 21              LDA BALL_X
+00339  20F2  C9 D2                 CMP #210
+00340  20F4  B0 11                 BCS MISS_RIGHT
+00341  20F6  C9 C8                 CMP #200
+00342  20F8  90 0C                 BCC SKIP_CHECK
+00343  20FA             
+00344  20FA  AD 58 21              LDA BALL_Y
+00345  20FD  38                    SEC
+00346  20FE  ED 5A 21              SBC CPU_Y
+00347  2101  C9 14                 CMP #20
+00348  2103  90 18                 BCC BOUNCE_X
+00349  2105  60                    RTS
+00350  2106             
+00351  2106             SKIP_CHECK 
+00352  2106  60                    RTS
+00353  2107             
+00354  2107             MISS_LEFT
+00355  2107             MISS_RIGHT 
+00356  2107                        ; RESET BALL CENTER
+00357  2107  A9 64                 LDA #100
+00358  2109  8D 57 21              STA BALL_X
+00359  210C  A9 50                 LDA #80
+00360  210E  8D 58 21              STA BALL_Y
+00361  2111             
+00362  2111                        ; INVERT HORIZONTAL DIR
+00363  2111  AD 5D 21              LDA BALL_DIR_X
+00364  2114  49 FF                 EOR #$FF
+00365  2116  18                    CLC
+00366  2117  69 01                 ADC #1
+00367  2119  8D 5D 21              STA BALL_DIR_X
+00368  211C  60                    RTS
+00369  211D             
+00370  211D             BOUNCE_X
+00371  211D  AD 5D 21              LDA BALL_DIR_X
+00372  2120  49 FF                 EOR #$FF
+00373  2122  18                    CLC
+00374  2123  69 01                 ADC #1
+00375  2125  8D 5D 21              STA BALL_DIR_X
+00376  2128  60                    RTS
+00377  2129             
+00378  2129             DRAW_SPRITES 
+00379  2129  AD 57 21              LDA BALL_X
+00380  212C  8D 00 D0              STA $D000
+00381  212F  AD 58 21              LDA BALL_Y
+00382  2132  8D 01 D0              STA $D001
+00383  2135             
+00384  2135  A9 18                 LDA #24
+00385  2137  8D 02 D0              STA $D002
+00386  213A  AD 59 21              LDA PLAYER_Y
+00387  213D  8D 03 D0              STA $D003
+00388  2140             
+00389  2140  A9 E8                 LDA #232
+00390  2142  8D 04 D0              STA $D004
+00391  2145  AD 5A 21              LDA CPU_Y
+00392  2148  8D 05 D0              STA $D005
+00393  214B  60                    RTS
+00394  214C             
+00395  214C             DELAY
+00396  214C  A2 FF                 LDX #$FF
+00397  214E             DELAY_OUTER 
+00398  214E  A0 40                 LDY #$40
+00399  2150             DELAY_INNER 
+00400  2150  88                    DEY
+00401  2151  D0 FD                 BNE DELAY_INNER
+00402  2153  CA                    DEX
+00403  2154  D0 F8                 BNE DELAY_OUTER
+00404  2156  60                    RTS
+00405  2157             
+00406  2157             ; VARIABLES FOR GAME
+00407  2157  64         BALL_X     BYTE 100
+00408  2158  50         BALL_Y     BYTE 80
+00409  2159  64         PLAYER_Y   BYTE 100
+00410  215A  50         CPU_Y      BYTE 80
+00411  215B  00         CPU_COUNTER BYTE 0
+00412  215C  00         JOY_STATE  BYTE 0
+00413  215D  01         BALL_DIR_X BYTE 1
+00414  215E  01         BALL_DIR_Y BYTE 1
+00415  215F             
+00416  215F             ; END OF FILE
+00417  215F             
+00418  215F             
+
+******* 61 Label(s) *******
+ball_dir_x = $215D 
+ball_dir_y = $215E 
+ball_sprite = $3000 
+ball_x = $2157 
+ball_y = $2158 
+bounce_x = $211D 
+check_cpu = $20EF 
+check_paddles = $20D8 
+clear_screen = $0A04 
+cpu_counter = $215B 
+cpu_up = $209F 
+cpu_y = $215A 
+cpupaddle_sprite = $3080 
+credits_text = $097C 
+delay = $214C 
+delay_inner = $2150 
+delay_outer = $214E 
+draw_sprites = $2129 
+exit_program = $084C 
+exit_text = $09F8 
+game_start = $2000 
+game_text = $092F 
+get_key = $0A1B 
+gk_wait = $0A1D 
+invert_y = $20CC 
+joy_state = $215C 
+mainloop = $2040 
+menu_loop = $0813 
+menu_text = $0862 
+miss_left = $2107 
+miss_right = $2107 
+move_ball = $20AA 
+move_cpu = $207D 
+pc_done = $097B 
+pc_loop = $096F 
+pe_done = $09F7 
+pe_loop = $09EB 
+pg_done = $092E 
+pg_loop = $0922 
+player_y = $2159 
+playerpaddle_sprite = $3040 
+pm_done = $0861 
+pm_loop = $0855 
+print_credits = $096D 
+print_exit = $09E9 
+print_game = $0920 
+print_menu = $0853 
+read_input = $2052 
+show_credits = $083D 
+skip_check = $2106 
+skip_cpu = $20A9 
+skip_down = $207C 
+skip_up = $2071 
+start = $0810 
+start_game = $0828 
+try_down = $2072 
+try_up = $2067 
+wait_for_key = $0A0A 
+wait_key = $0816 
+wfk_release = $0A13 
+wfk_wait = $0A0C 
+
+******* 5 Unused label(s) *******
+ball_sprite
+cpupaddle_sprite
+game_start
+playerpaddle_sprite
+start
+
+******* 1 Variable(s) *******
+tgt_c64  = $0001
+******* 1 Unused variables(s) *******
+tgt_c64
+

@@ -20,7 +20,7 @@
     <AutoLaunchName>pingpong.prg</AutoLaunchName>
     <NoSingleFileBuild>False</NoSingleFileBuild>
     <CreatedWithVersion>CBM prg Studio 4.6.0</CreatedWithVersion>
-    <HasGitRepo>False</HasGitRepo>
+    <HasGitRepo>True</HasGitRepo>
     <OutputBinDir />
     <GitIgnoreList />
     <UsingKickAssembler>False</UsingKickAssembler>
@@ -70,17 +70,6 @@
             <Breakpoints />
             <Bookmarks />
             <Topmost>True</Topmost>
-            <FileOpen>True</FileOpen>
-        </SourceFile>
-        <SourceFile>
-            <Name>\Assembly Files\menu.asm</Name>
-            <PrgName />
-            <FileType>2</FileType>
-            <IncludeInBuild>True</IncludeInBuild>
-            <Regions />
-            <Breakpoints />
-            <Bookmarks />
-            <Topmost>False</Topmost>
             <FileOpen>True</FileOpen>
         </SourceFile>
     </SourceFiles>

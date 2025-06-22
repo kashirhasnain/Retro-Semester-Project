@@ -51,6 +51,7 @@
     <BuildList>
         <FileName>Assembly Files\game.asm</FileName>
         <FileName>Assembly Files\menu.asm</FileName>
+        <FileName>Assembly_Files\game.asm</FileName>
     </BuildList>
     <DetermineBuildOrder>0</DetermineBuildOrder>
     <PaddingByte>0</PaddingByte>
@@ -62,7 +63,7 @@
     <ExtendedBASIC>False</ExtendedBASIC>
     <SourceFiles>
         <SourceFile>
-            <Name>\Assembly Files\game.asm</Name>
+            <Name>\Assembly_Files\game.asm</Name>
             <PrgName />
             <FileType>2</FileType>
             <IncludeInBuild>True</IncludeInBuild>

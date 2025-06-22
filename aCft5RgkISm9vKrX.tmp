@@ -1,38 +1,23 @@
+##{0:0:0:game.prg}D:\Semester_Project_Retro\Assembly Files\game.asm
+
 .include "LAMAlib.inc"
 .include "LAMAlib-sprites.inc"
 
+SCREEN_BASE = $400
+MUSIC_BASE  = $C000
+
+
 ; Ball Sprite Code
-* = $3000
-ball_sprite
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$18,$3C,$3C,$3C,$3C,$18
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00
+install_file "ball.prg",$3000
+    
 ; Player Paddle Sprite Code
-* = $3040
+install_file "playerpaddle.prg",$3040
 playerpaddle_sprite
-    BYTE $00,$18,$18,$18,$18,$18,$18,$18
-    BYTE $18,$18,$18,$18,$18,$18,$18,$18
-    BYTE $18,$18,$18,$18,$18,$18,$18,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00,$00,$00,$00,$00,$00
-    BYTE $00,$00,$00
+    
 ; CPU Paddle Sprite Code
-* = $3080
-cpupaddle_sprite
-     BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
-    BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
-    BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
-    BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
-    BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
-    BYTE $0F,$FF,$F0,$0F,$FF,$F0,$0F,$FF,$F0
-    BYTE $0F,$FF,$F0
+install_file "cpupaddle.prg",$3080
+_sprite
+    
 
       * = $0801
 
@@ -193,8 +178,18 @@ game_start
         SEI
         LDX #$00
         STX $D020       ; Border
-        LDA #$0E
+        LDA #$0
         STA $D021       ; Background: Light Blue
+        ;textcolor 9
+        ;set_cursor_pos 5,13
+       ; print "beetle byte 64"
+        ;set_cursor_pos 13,1
+        ;textcolor 1
+       ; print "PING PONG Game"
+        ;set_cursor_pos 20,9
+       ; textcolor 4
+        
+
 
         ; Sprite pointers
         LDA #64
@@ -414,4 +409,5 @@ ball_dir_x  BYTE 1
 ball_dir_y  BYTE 1
 
 ; END OF FILE
+
 

@@ -1,0 +1,15 @@
+al 001149 .__BSS_LOAD__
+al 001149 .__BSS_RUN__
+al 000000 .__BSS_SIZE__
+al 000001 .__EXEHDR__
+al 000001 .__LOADADDR__
+al 000000 .__ZP_FILEOFFS__
+al 0000A9 .__ZP_LAST__
+al 000012 .__ZP_SIZE__
+al 0000A5 .__ZP_START__
+al 0000A5 ._llzp_word1
+al 0000A7 ._llzp_word2
+al 0010E7 ._maskedtwopotentials
+al 0010EF ._memcopy_sr
+al 0010FE ._twopotentials
+al 001106 ._updateSpriteAttributes

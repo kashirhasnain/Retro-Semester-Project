@@ -58,8 +58,8 @@ To change the music, use GoatTracker, export the SID file, and include it in the
 
 ## Controls
 
-- **Player Paddle:** Use Joystick Port 2 or keyboard (keys may be mapped as W/S or Up/Down arrows, depending on implementation).
-- **CPU Paddle:** Controlled by basic AI.
+- **Player vs Player Game:** Use Joystick Port 2 or keyboard (keys may be mapped as W/S or Up/Down arrows, depending on implementation).
+
 
 
 
